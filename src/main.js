@@ -28,10 +28,32 @@ const stories = [
 
 const app = document.querySelector('#app');
 
+const printUserStory = () => {
+  const { userStory, content, html } = getUserStory();
+  console.log('content', content);
+  console.log('html', html);
+}
+
+const printUserStoryButton = document.createElement('button');
+printUserStoryButton.innerHTML = 'Print User Story';
+printUserStoryButton.addEventListener('click', printUserStory);
+app.appendChild(printUserStoryButton);
+
 stories.forEach((story) => {
-  const storyElement = document.createElement('pre');
+  const storyElement = document.createElement('div');
   storyElement.classList.add('story');
   storyElement.innerHTML = story;
   app.appendChild(storyElement);
 });
 
+const getUserStory = () => {
+  const userStory = document.querySelector('.ProseMirror'); 
+  const content = userStory.textContent;
+  const html = userStory.innerHTML;
+
+  return {
+    userStory,
+    content,
+    html,
+  };
+};
