@@ -417,3 +417,18 @@
   border: 1px solid #ccc;
   padding: 20px;
 }
+
+.title-holder {
+  display: flex;
+  flex-direction: column;
+  margin: 1em 0;
+}
+
+.title-input {
+  min-width: 400px;
+  padding: 0.5rem;
+}
+
+.red {
+  color: red;
+}
