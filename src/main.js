@@ -76,6 +76,7 @@ const checker = (text) => {
     if (!checkWord.found) {
       const pEl = document.createElement('p');
       pEl.innerText = `Warning => Word '${word}' misspelled. ${checkWord.suggestions.length ? 'Suggestions: ' + checkWord.suggestions.map(e => e.word).join(', ') : 'No suggestions'}.`;
+      pEl.classList = 'orange'
       errorsDiv.appendChild(pEl);
       underlineWord(word);
     }
