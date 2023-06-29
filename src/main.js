@@ -69,6 +69,7 @@ const getUserStory = () => {
 
 const checker = (text) => {
   const errorsDiv = document.querySelector('.errors');
+  errorsDiv.innerHTML = '';
   text.trim().split(' ').forEach(word => {
     const clearedWord = word.replace('[^a-zA-Z0-9]', '')
     const checkWord = dict.lookup(clearedWord)
@@ -84,6 +85,6 @@ const checker = (text) => {
 function underlineWord(word) {
   const editor = document.getElementById("editor");
   const text = editor.innerHTML;
-  const newText = text.replace(new RegExp('\\b' + word + '\\b', 'gi'), '<span class="red">$&</span>');
+  const newText = text.replace(new RegExp(word, 'gi'), '<span class="red">$&</span>');
   editor.innerHTML = newText;
 }
