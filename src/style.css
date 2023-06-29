@@ -429,10 +429,14 @@
   padding: 0.5rem;
 }
 
-.red {
-  color: red;
+.underline {
+  position: relative;
+  text-decoration: underline;
 }
 
-.orange {
+.tooltip {
+  display: none;
+  position: absolute;
+  top: 100%;
   color: orange;
 }

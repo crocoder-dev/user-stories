@@ -35,16 +35,19 @@ const app = document.querySelector('#app');
 const printUserStory = () => {
   const { userStory, content, html, title } = getUserStory();
 
+  const storyElement = document.querySelector('#newStory');
+  storyElement.innerHTML = '';
+  storyElement.innerHTML = html;
+
   checker(content);
+
   console.log('title:', title);
   console.log('content:', content);
   console.log('html:', html);
 }
 
-const printUserStoryButton = document.createElement('button');
-printUserStoryButton.innerHTML = 'Print User Story';
+const printUserStoryButton = document.querySelector('#print');
 printUserStoryButton.addEventListener('click', printUserStory);
-app.appendChild(printUserStoryButton);
 
 stories.forEach((story) => {
   const storyElement = document.createElement('div');
@@ -68,24 +71,30 @@ const getUserStory = () => {
 };
 
 const checker = (text) => {
-  const errorsDiv = document.querySelector('.errors');
-  errorsDiv.innerHTML = '';
-  text.trim().split(' ').forEach(word => {
-    const clearedWord = word.replace('[^a-zA-Z0-9]', '')
-    const checkWord = dict.lookup(clearedWord)
+  text.match(/\b(\w+)\b/g).forEach((word, i) => {
+    const checkWord = dict.lookup(word);
+
     if (!checkWord.found) {
-      const pEl = document.createElement('p');
-      pEl.innerText = `Warning => Word '${word}' misspelled. ${checkWord.suggestions.length ? 'Suggestions: ' + checkWord.suggestions.map(e => e.word).join(', ') : 'No suggestions'}.`;
-      pEl.classList = 'orange'
-      errorsDiv.appendChild(pEl);
-      underlineWord(word);
+
+      const storyElement = document.querySelector('#newStory');
+      const storyText = storyElement.innerHTML;
+      const newText = storyText.replace(new RegExp(word, 'gi'), `<span class="underline" id="word-${i}">$&</span>`);
+      storyElement.innerHTML = newText;
+
+      // const wordEl = document.querySelector('#word-' + i);
+
+      // const pEl = document.createElement('p');
+      // pEl.innerText = `Word '${word}' misspelled. ${checkWord.suggestions.length ? 'Suggestions: ' + checkWord.suggestions.map(e => e.word).join(', ') : 'No suggested words'}.`;
+      // pEl.classList = 'tooltip';
+      // pEl.id = 'tooltip-' + i;
+
+      // wordEl.appendChild(pEl);
+      // wordEl.addEventListener('mouseover', () => showTooltip(i));
     }
   })
 }
 
-function underlineWord(word) {
-  const editor = document.getElementById("editor");
-  const text = editor.innerHTML;
-  const newText = text.replace(new RegExp(word, 'gi'), '<span class="red">$&</span>');
-  editor.innerHTML = newText;
+const showTooltip = (i) => {
+  const tooltipEl = document.querySelector(`#tooltip-${i}`);
+  tooltipEl.style.display = 'block';
 }
