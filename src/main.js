@@ -32,6 +32,10 @@ const stories = [
 
 const app = document.querySelector('#app');
 
+const escapeRegExp = (string) => {
+  return string.replace(/<(?:("[^"]*")|('[^']*')|([^'">]+))*>/g, ' ');
+}
+
 const printUserStory = () => {
   const { userStory, content, html, title } = getUserStory();
 
@@ -39,7 +43,7 @@ const printUserStory = () => {
   storyElement.innerHTML = '';
   storyElement.innerHTML = html;
 
-  checker(content);
+  checker(html);
 
   console.log('title:', title);
   console.log('content:', content);
@@ -70,31 +74,39 @@ const getUserStory = () => {
   };
 };
 
-const checker = (text) => {
+const checker = (html) => {
+  const text = escapeRegExp(html);
+  const wrongWords = [];
+
   text.match(/\b(\w+)\b/g).forEach((word, i) => {
-    const checkWord = dict.lookup(word);
+    const checkWord = dict.lookup(word.toLowerCase());
 
-    if (!checkWord.found) {
-
-      const storyElement = document.querySelector('#newStory');
-      const storyText = storyElement.innerHTML;
-      const newText = storyText.replace(new RegExp(word, 'gi'), `<span class="underline" id="word-${i}">$&</span>`);
-      storyElement.innerHTML = newText;
-
-      // const wordEl = document.querySelector('#word-' + i);
-
-      // const pEl = document.createElement('p');
-      // pEl.innerText = `Word '${word}' misspelled. ${checkWord.suggestions.length ? 'Suggestions: ' + checkWord.suggestions.map(e => e.word).join(', ') : 'No suggested words'}.`;
-      // pEl.classList = 'tooltip';
-      // pEl.id = 'tooltip-' + i;
-
-      // wordEl.appendChild(pEl);
-      // wordEl.addEventListener('mouseover', () => showTooltip(i));
+    if (!checkWord.found && !(wrongWords || []).map(e => e.word.toLowerCase()).includes(word.toLowerCase())) {
+      const obj = {
+        word,
+        suggestions: checkWord.suggestions
+      }
+      wrongWords.push(obj);
     }
-  })
-}
+  });
 
-const showTooltip = (i) => {
-  const tooltipEl = document.querySelector(`#tooltip-${i}`);
-  tooltipEl.style.display = 'block';
+  wrongWords.forEach((wordObj, i) => {
+    const editor = document.getElementById("editor");
+    const editorHtml = editor.innerHTML;
+
+    const regex = new RegExp(wordObj.word, "gi");
+    const newHtml = editorHtml.replace(regex, `<span class="underline" id="word-${i}">$&</span>`);
+    editor.innerHTML = newHtml;
+
+    const wordElements = document.querySelectorAll('#word-' + i);
+
+    wordElements.forEach((wordElement, wordElIx) => {
+      const tooltipEl = document.createElement('span');
+      tooltipEl.innerText = `Word '${wordObj.word}' misspelled. ${wordObj.suggestions.length ? 'Suggestions: ' + wordObj.suggestions.map(e => e.word).join(', ') : 'No suggested words'}.`;
+      tooltipEl.classList = 'tooltip';
+      tooltipEl.id = `tooltip_${i}-${wordElIx}`;
+
+      wordElement.appendChild(tooltipEl);
+    });
+  });
 }

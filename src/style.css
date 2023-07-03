@@ -432,11 +432,21 @@
 .underline {
   position: relative;
   text-decoration: underline;
+  color: #fa9f27;
+}
+.underline:hover .tooltip {
+  display: inline-block;
 }
 
 .tooltip {
+  z-index: 10;
   display: none;
   position: absolute;
-  top: 100%;
-  color: orange;
+  top: calc(100% + 5px);
+  left: 0;
+  width: 500px;
+  background: #aeaeae;
+  padding: 0.5em;
+  border-radius: 5px;
+  color: white;
 }
