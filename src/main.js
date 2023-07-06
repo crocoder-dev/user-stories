@@ -90,6 +90,8 @@ const checker = (html) => {
     }
   });
 
+  fromNuclia()
+
   wrongWords.forEach((wordObj, i) => {
     const editor = document.getElementById("editor");
     const editorHtml = editor.innerHTML;
@@ -102,11 +104,21 @@ const checker = (html) => {
 
     wordElements.forEach((wordElement, wordElIx) => {
       const tooltipEl = document.createElement('span');
-      tooltipEl.innerText = `Word '${wordObj.word}' misspelled. ${wordObj.suggestions.length ? 'Suggestions: ' + wordObj.suggestions.map(e => e.word).join(', ') : 'No suggested words'}.`;
+      tooltipEl.innerHTML = `<span class="top">Word '${wordObj.word}' misspelled.</span><span class="bottom">${wordObj.suggestions.length ? 'Suggestions: ' + wordObj.suggestions.map(e => e.word).join(', ') : 'No suggested words'}.</span>`;
       tooltipEl.classList = 'tooltip';
       tooltipEl.id = `tooltip_${i}-${wordElIx}`;
 
       wordElement.appendChild(tooltipEl);
     });
   });
+}
+
+const fromNuclia = async () => {
+  const fromServer = await fetch('http://localhost:5555/functions/nuclia', {mode: 'no-cors', method: 'get'})
+  //const fromServer = await fetch('http://localhost:5555/functions/nuclia')
+  const data = await fromServer.json();
+
+  console.log(data)
+  
+  //return data
 }

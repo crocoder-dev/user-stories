@@ -432,21 +432,32 @@
 .underline {
   position: relative;
   text-decoration: underline;
-  color: #fa9f27;
+  text-decoration-color: red;
+  cursor: pointer;
 }
+
 .underline:hover .tooltip {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
 }
 
 .tooltip {
   z-index: 10;
   display: none;
   position: absolute;
-  top: calc(100% + 5px);
   left: 0;
+  top: 100%;
   width: 500px;
-  background: #aeaeae;
-  padding: 0.5em;
+  background: #4b4b4b;
   border-radius: 5px;
   color: white;
+}
+
+.top {
+  padding: 0.5em;
+  border-bottom: thin solid silver;
+}
+
+.bottom {
+  padding: 0.5em;
 }
