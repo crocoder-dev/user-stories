@@ -36,12 +36,14 @@ const escapeRegExp = (string) => {
   return string.replace(/<(?:("[^"]*")|('[^']*')|([^'">]+))*>/g, ' ');
 }
 
-const printUserStory = () => {
+const printUserStory = (e) => {
+  e.preventDefault();
   const { userStory, content, html, title } = getUserStory();
 
   const storyElement = document.querySelector('#newStory');
   storyElement.innerHTML = '';
   storyElement.innerHTML = html;
+  fromNuclia();
 
   checker(html);
 
@@ -90,8 +92,6 @@ const checker = (html) => {
     }
   });
 
-  fromNuclia()
-
   wrongWords.forEach((wordObj, i) => {
     const editor = document.getElementById("editor");
     const editorHtml = editor.innerHTML;
@@ -114,11 +114,9 @@ const checker = (html) => {
 }
 
 const fromNuclia = async () => {
-  const fromServer = await fetch('http://localhost:5555/functions/nuclia', {mode: 'no-cors', method: 'get'})
-  //const fromServer = await fetch('http://localhost:5555/functions/nuclia')
+  const fromServer = await fetch('api/nuclia', {method: 'GET'});
+
   const data = await fromServer.json();
 
   console.log(data)
-  
-  //return data
 }
